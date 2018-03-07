@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.*?>
+<?import com.jfoenix.validation.RequiredFieldValidator?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<StackPane styleClass="dark"
+           fx:controller="com.zbw.gitpic.controller.MainController"
+           fx:id="root"
+           onDragOver="#setTransferMode"
+           onDragDropped="#setUploadImgPath"
+           xmlns:fx="http://javafx.com/fxml/1"
+           xmlns="http://javafx.com/javafx/2.2">
+
+    <VBox>
+        <children>
+            <GridPane alignment="CENTER" hgap="15.0" vgap="15.0">
+                <columnConstraints>
+                    <ColumnConstraints minWidth="10.0" prefWidth="100.0"/>
+                    <ColumnConstraints minWidth="10.0" prefWidth="200.0"/>
+                    <ColumnConstraints minWidth="10.0" prefWidth="70.0"/>
+                </columnConstraints>
+                <rowConstraints>
+                    <RowConstraints minHeight="10.0" prefHeight="30.0"/>
+                    <RowConstraints minHeight="10.0" prefHeight="30.0"/>
+                    <RowConstraints minHeight="10.0" prefHeight="30.0"/>
+                </rowConstraints>
+                <children>
+                    <VBox alignment="CENTER_RIGHT" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="0"
+                          GridPane.rowIndex="0">
+                        <Label contentDisplay="CENTER" text="项目目录:" styleClass="text-dark"/>
+                    </VBox>
+                    <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1"
+                          GridPane.rowIndex="0">
+                        <JFXTextField fx:id="projectPathTextField" styleClass="text-field-dark,text-dark"
+                                      prefWidth="200.0"/>
+                    </VBox>
+                    <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2"
+                          GridPane.rowIndex="0">
+                        <Label prefHeight="24.0" prefWidth="24.0" styleClass="button-folder"
+                               onMouseClicked="#chooseProjectPath"/>
+                    </VBox>
+
+
+                    <VBox alignment="CENTER_RIGHT" GridPane.columnIndex="0" GridPane.rowIndex="1">
+                        <Label contentDisplay="CENTER" text="图片保存目录:" styleClass="text-dark"/>
+                    </VBox>
+                    <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1"
+                          GridPane.rowIndex="1">
+                        <JFXTextField fx:id="imgPathTextField" styleClass="text-field-dark,text-dark"
+                                      prefWidth="200.0"/>
+                    </VBox>
+                    <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2"
+                          GridPane.rowIndex="1">
+                        <Label prefHeight="24.0" prefWidth="24.0" styleClass="button-folder"
+                               onMouseClicked="#chooseImgPath"/>
+                    </VBox>
+
+
+                    <VBox alignment="CENTER_RIGHT" GridPane.columnIndex="0" GridPane.rowIndex="2">
+                        <Label contentDisplay="CENTER" text="Git图片路径:" styleClass="text-dark"/>
+                    </VBox>
+                    <VBox alignment="CENTER_LEFT" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.columnSpan="2"
+                          maxWidth="250.0">
+                        <JFXTextField fx:id="rawUrlTextField" styleClass="text-field-dark,text-dark" prefWidth="250.0"/>
+                    </VBox>
+                </children>
+            </GridPane>
+
+            <HBox alignment="CENTER" prefHeight="50.0" prefWidth="600.0" spacing="10.0">
+            </HBox>
+
+            <HBox alignment="CENTER" prefHeight="50.0" prefWidth="600.0" spacing="10.0">
+                <children>
+                    <JFXButton styleClass="button-raised,button-tiny" text="选择图片"
+                               onAction="#chooseUploadImg"/>
+                    <JFXButton fx:id="commitButton" styleClass="button-raised,button-tiny,orange" text="提交并上传"
+                               onAction="#commitAndPush" disable="true"/>
+                </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="50.0" prefWidth="600.0" spacing="10.0">
+                <children>
+                    <Label fx:id="promptLabel" styleClass="text-dark"/>
+                </children>
+            </HBox>
+        </children>
+        <padding>
+            <Insets top="50.0"/>
+        </padding>
+    </VBox>
+
+    <JFXDialog fx:id="dialog">
+        <JFXDialogLayout styleClass="dark" prefWidth="300.0">
+            <heading>
+                <Label styleClass="text-dark">Github</Label>
+            </heading>
+            <body>
+                <VBox>
+                    <HBox alignment="CENTER" prefHeight="50.0" prefWidth="300.0" spacing="10.0">
+                        <Label contentDisplay="CENTER" text="账号:" styleClass="text-dark"/>
+                        <JFXTextField fx:id="usernameTextField" styleClass="text-field-dark,text-dark">
+                            <validators>
+                                <RequiredFieldValidator message="请输入账号!"/>
+                            </validators>
+                        </JFXTextField>
+                    </HBox>
+                    <HBox alignment="CENTER" prefHeight="50.0" prefWidth="300.0" spacing="10.0">
+                        <Label contentDisplay="CENTER" text="密码:" styleClass="text-dark"/>
+                        <JFXPasswordField fx:id="passwordTextField" styleClass="text-field-dark,text-dark">
+                            <validators>
+                                <RequiredFieldValidator message="请输入密码!"/>
+                            </validators>
+                        </JFXPasswordField>
+                    </HBox>
+                </VBox>
+            </body>
+            <actions>
+                <JFXButton fx:id="acceptButton" styleClass="dialog-accept" onAction="#dialogAccept">确认
+                </JFXButton>
+                <JFXButton fx:id="cancelButton" styleClass="dialog-cancel" onAction="#dialogCancel">取消
+                </JFXButton>
+            </actions>
+        </JFXDialogLayout>
+    </JFXDialog>
+</StackPane>

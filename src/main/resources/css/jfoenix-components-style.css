@@ -1,0 +1,61 @@
+.dark {
+    -fx-background-color: #2b2b2b;
+}
+
+.orange {
+    -fx-background-color: #E64A19;
+}
+
+.text-dark {
+    -fx-text-fill: #bababa;
+}
+
+.text-success {
+    -fx-text-fill: #37B158;
+}
+
+.text-error {
+    -fx-text-fill: RED;
+}
+
+.text-field-dark {
+    -fx-background-color: #2b2b2b;
+}
+
+.text-field-dark:focused {
+    -fx-background-color: #2b2b2b;
+}
+
+.toggle-button-primary {
+    -jfx-toggle-color: #5264AE;
+}
+
+.button-tiny {
+    -fx-pref-width: 100px;
+    -fx-font-size: 12px;
+}
+
+.dialog-accept {
+    -fx-text-fill: #03A9F4;
+    -fx-font-weight: BOLD;
+    -fx-padding: 0.7em 0.8em;
+}
+
+.dialog-cancel {
+    -fx-text-fill: #bababa;
+    -fx-font-weight: BOLD;
+    -fx-padding: 0.7em 0.8em;
+}
+
+.button-folder {
+    -fx-background-image: url('../images/folder_dark.png');
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+    -fx-pref-height: 24px;
+    -fx-pref-width: 24px;
+}
+
+.button-folder:hover {
+    -fx-background-image: url('../images/folder_light.png');
+}
+
