@@ -41,6 +41,7 @@ target/
 *.iml
 *.ipr
 out/
+classes/
 
 ### NetBeans ###
 nbproject/private/

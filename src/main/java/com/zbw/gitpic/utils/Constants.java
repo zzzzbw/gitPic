@@ -15,4 +15,5 @@ public interface Constants {
     String GIT_DEFAULT_COMMIT_MESSAGE = "update";
     String GIT_SSH = "git@";
     String GIT_HTTPS = "https://";
+    String GIT_MASTER_HEAD = "refs/heads/master";
 }

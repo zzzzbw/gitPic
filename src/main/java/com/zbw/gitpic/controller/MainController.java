@@ -170,14 +170,17 @@ public class MainController extends StackPane implements Initializable {
     @FXML
     protected void commitAndPush() {
         commitButton.setDisable(true);
-        try {
-            GitUtils.commitAll(repository);
-        } catch (TipException e) {
-            showErrorMessage(e.getMessage());
-            commitButton.setDisable(false);
-            return;
-        }
-        showNormalMessage("push到github中...");
+        ThreadPool.getInstance().execute(() -> {
+            try {
+                showNormalMessage("commit中...");
+                GitUtils.commitAll(repository);
+                showSuccessMessage("commit成功!");
+            } catch (TipException e) {
+                showErrorMessage(e.getMessage());
+                commitButton.setDisable(false);
+                return;
+            }
+        });
         pushGit();
     }
 
@@ -193,7 +196,6 @@ public class MainController extends StackPane implements Initializable {
         String password = this.passwordTextField.getText();
         Preference.getInstance().saveGitUsername(username);
         Preference.getInstance().saveGitPassword(password);
-        showNormalMessage("push到github中...");
         pushGit();
         dialog.close();
     }
@@ -304,6 +306,7 @@ public class MainController extends StackPane implements Initializable {
      */
     private void pushGit() {
         ThreadPool.getInstance().execute(() -> {
+            showNormalMessage("push到github中...");
             try {
                 String uri = GitUtils.getRemoteUri(repository);
                 if (Constants.GIT_SSH.equals(GitUtils.authType(uri))) {

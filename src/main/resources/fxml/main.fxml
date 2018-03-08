@@ -81,7 +81,8 @@
             </HBox>
             <HBox alignment="CENTER" prefHeight="50.0" prefWidth="600.0" spacing="10.0">
                 <children>
-                    <Label fx:id="promptLabel" styleClass="text-dark"/>
+                    <Label fx:id="promptLabel" prefWidth="300.0" styleClass="text-dark" wrapText="true"
+                           alignment="CENTER"/>
                 </children>
             </HBox>
         </children>
