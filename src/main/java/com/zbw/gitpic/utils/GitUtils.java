@@ -135,43 +135,7 @@ public class GitUtils {
         try {
             Iterable<PushResult> results = git.push().call();
             PushResult result = results.iterator().next();
-            String msg = "未知原因";
-            if (null == result) {
-                throw new TipException(("push失败: " + msg));
-            }
-            RemoteRefUpdate.Status status = result.getRemoteUpdate(Constants.GIT_MASTER_HEAD).getStatus();
-            switch (status) {
-                case OK:
-                    return;
-                case NOT_ATTEMPTED:
-                    msg = "Push process hasn't yet attempted to update this ref. This is the default status, prior to push process execution.";
-                    break;
-                case UP_TO_DATE:
-                    msg = "Remote ref was up to date, there was no need to update anything.";
-                    break;
-                case REJECTED_NONFASTFORWARD:
-                    msg = "Remote ref update was rejected, as it would cause non fast-forward  update.";
-                    break;
-                case REJECTED_NODELETE:
-                    msg = "Remote ref update was rejected, because remote side doesn't support/allow deleting refs.";
-                    break;
-                case REJECTED_REMOTE_CHANGED:
-                    msg = "Remote ref update was rejected, because old object id on remote repository wasn't the same as defined expected old object.";
-                    break;
-                case REJECTED_OTHER_REASON:
-                    msg = "Remote ref update was rejected for other reason";
-                    break;
-                case NON_EXISTING:
-                    msg = "Remote ref didn't exist. Can occur on delete request of a non existing ref.";
-                    break;
-                case AWAITING_REPORT:
-                    msg = "Push process is awaiting update report from remote repository. This is a temporary state or state after critical error in push process.";
-                    break;
-                default:
-                    msg = "未知原因";
-                    break;
-            }
-            throw new TipException("push失败: " + msg);
+            validPushResult(result);
         } catch (GitAPIException e) {
             e.printStackTrace();
             logger.error(e.getMessage());
@@ -190,7 +154,9 @@ public class GitUtils {
         Git git = new Git(repository);
         try {
             CredentialsProvider cp = new UsernamePasswordCredentialsProvider(username, password);
-            git.push().setCredentialsProvider(cp).call();
+            Iterable<PushResult> results = git.push().setCredentialsProvider(cp).call();
+            PushResult result = results.iterator().next();
+            validPushResult(result);
         } catch (TransportException e) {
             logger.error(e.getMessage());
             throw new AuthorizedException("验证失败");
@@ -199,6 +165,51 @@ public class GitUtils {
             logger.error(e.getMessage());
             throw new TipException("git push 异常, message:" + e.getMessage());
         }
+    }
+
+    /**
+     * 验证push结果
+     *
+     * @param result
+     */
+    public static void validPushResult(PushResult result) {
+        String msg = "未知原因";
+        if (null == result) {
+            throw new TipException(("push失败: " + msg));
+        }
+        RemoteRefUpdate.Status status = result.getRemoteUpdate(Constants.GIT_MASTER_HEAD).getStatus();
+        switch (status) {
+            case OK:
+                return;
+            case NOT_ATTEMPTED:
+                msg = "Push process hasn't yet attempted to update this ref. This is the default status, prior to push process execution.";
+                break;
+            case UP_TO_DATE:
+                msg = "Remote ref was up to date, there was no need to update anything.";
+                break;
+            case REJECTED_NONFASTFORWARD:
+                msg = "Remote ref update was rejected, as it would cause non fast-forward  update.";
+                break;
+            case REJECTED_NODELETE:
+                msg = "Remote ref update was rejected, because remote side doesn't support/allow deleting refs.";
+                break;
+            case REJECTED_REMOTE_CHANGED:
+                msg = "Remote ref update was rejected, because old object id on remote repository wasn't the same as defined expected old object.";
+                break;
+            case REJECTED_OTHER_REASON:
+                msg = "Remote ref update was rejected for other reason";
+                break;
+            case NON_EXISTING:
+                msg = "Remote ref didn't exist. Can occur on delete request of a non existing ref.";
+                break;
+            case AWAITING_REPORT:
+                msg = "Push process is awaiting update report from remote repository. This is a temporary state or state after critical error in push process.";
+                break;
+            default:
+                msg = "未知原因";
+                break;
+        }
+        throw new TipException("push失败: " + msg);
     }
 
     /**
@@ -254,5 +265,6 @@ public class GitUtils {
     public static String createGitCdnUrl(String blobUrl) {
         return blobUrl.replace("github", "raw.githubusercontent").replace("blob/", "");
     }
+
 
 }

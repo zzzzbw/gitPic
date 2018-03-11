@@ -5,6 +5,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import com.jfoenix.validation.ValidationFacade?>
 <StackPane styleClass="dark"
            fx:controller="com.zbw.gitpic.controller.MainController"
            fx:id="root"
@@ -81,8 +82,16 @@
             </HBox>
             <HBox alignment="CENTER" prefHeight="50.0" prefWidth="600.0" spacing="10.0">
                 <children>
-                    <Label fx:id="promptLabel" prefWidth="300.0" styleClass="text-dark" wrapText="true"
-                           alignment="CENTER"/>
+                    <JFXSpinner fx:id="promptSpinner" prefWidth="30.0" translateX="-15.0"/>
+                    <Label fx:id="promptLabel" maxWidth="300.0" styleClass="text-dark" wrapText="true"
+                           alignment="CENTER" translateX="-15.0"/>
+                </children>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="50.0" prefWidth="600.0" spacing="10.0">
+                <children>
+                    <JFXSpinner fx:id="gitSpinner" prefWidth="30.0" translateX="-15.0"/>
+                    <Label fx:id="gitLabel" maxWidth="300.0" styleClass="text-dark" wrapText="true"
+                           alignment="CENTER" translateX="-15.0"/>
                 </children>
             </HBox>
         </children>

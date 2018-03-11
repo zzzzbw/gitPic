@@ -1,9 +1,6 @@
 package com.zbw.gitpic.controller;
 
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXDialog;
-import com.jfoenix.controls.JFXPasswordField;
-import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.controls.*;
 import com.zbw.gitpic.exception.AuthorizedException;
 import com.zbw.gitpic.exception.TipException;
 import com.zbw.gitpic.utils.*;
@@ -46,19 +43,28 @@ public class MainController extends StackPane implements Initializable {
     private StackPane root;
 
     @FXML
-    private TextField projectPathTextField;
+    private JFXTextField projectPathTextField;
 
     @FXML
-    private TextField imgPathTextField;
+    private JFXTextField imgPathTextField;
 
     @FXML
-    private TextField rawUrlTextField;
+    private JFXTextField rawUrlTextField;
 
     @FXML
     private JFXButton commitButton;
 
     @FXML
+    private JFXSpinner promptSpinner;
+
+    @FXML
     private Label promptLabel;
+
+    @FXML
+    private JFXSpinner gitSpinner;
+
+    @FXML
+    private Label gitLabel;
 
     @FXML
     private JFXDialog dialog;
@@ -72,6 +78,8 @@ public class MainController extends StackPane implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         stage = new Stage();
+        promptSpinner.setVisible(false);
+        gitSpinner.setVisible(false);
         dialog.setTransitionType(JFXDialog.DialogTransition.CENTER);
         String projectPath = Preference.getInstance().getProjectPath();
         if (CastUtil.isNotEmpty(projectPath)) {
@@ -218,13 +226,24 @@ public class MainController extends StackPane implements Initializable {
     private void initGit(String projectPath) {
         ThreadPool.getInstance().execute(() -> {
             try {
-                showNormalMessage("初始化git项目中...");
+                Platform.runLater(() -> {
+                    gitSpinner.setVisible(true);
+                    gitLabel.setText("初始化git项目中...");
+                });
                 repository = GitUtils.init(projectPath);
                 isGitInit = true;
-                showSuccessMessage("git项目加载完成!");
+                Platform.runLater(() -> {
+                    gitSpinner.setVisible(false);
+                    gitLabel.setText("项目已加载");
+                    gitLabel.getStyleClass().add("text-success");
+                });
                 commitButton.setDisable(false);
             } catch (TipException e) {
                 showErrorMessage(e.getMessage());
+                Platform.runLater(() -> {
+                    gitSpinner.setVisible(false);
+                    gitLabel.setText("");
+                });
             }
         });
     }
@@ -306,12 +325,14 @@ public class MainController extends StackPane implements Initializable {
      */
     private void pushGit() {
         ThreadPool.getInstance().execute(() -> {
+            showPromptSpinner();
             showNormalMessage("push到github中...");
             try {
                 String uri = GitUtils.getRemoteUri(repository);
                 if (Constants.GIT_SSH.equals(GitUtils.authType(uri))) {
                     GitUtils.push(repository);
                     showSuccessMessage("push成功!");
+                    hidePromptSpinner();
                     commitButton.setDisable(false);
                 } else {
                     String username = Preference.getInstance().getGitUsername();
@@ -320,8 +341,10 @@ public class MainController extends StackPane implements Initializable {
                         try {
                             GitUtils.push(repository, username, password);
                             showSuccessMessage("push成功!");
+                            hidePromptSpinner();
                         } catch (AuthorizedException e) {
                             showErrorMessage(e.getMessage());
+                            hidePromptSpinner();
                             Platform.runLater(() -> dialog.show(root));
                         }
                         commitButton.setDisable(false);
@@ -331,8 +354,8 @@ public class MainController extends StackPane implements Initializable {
                 }
             } catch (TipException e) {
                 commitButton.setDisable(false);
+                hidePromptSpinner();
                 showErrorMessage(e.getMessage());
-                return;
             }
         });
     }
@@ -376,5 +399,13 @@ public class MainController extends StackPane implements Initializable {
             promptLabel.getStyleClass().addAll(styleClass);
             promptLabel.setText(msg);
         });
+    }
+
+    private void showPromptSpinner() {
+        Platform.runLater(() -> promptSpinner.setVisible(true));
+    }
+
+    private void hidePromptSpinner() {
+        Platform.runLater(() -> promptSpinner.setVisible(false));
     }
 }
