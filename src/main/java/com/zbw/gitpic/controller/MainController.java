@@ -237,6 +237,12 @@ public class MainController extends StackPane implements Initializable {
                     gitLabel.setText("项目已加载");
                     gitLabel.getStyleClass().add("text-success");
                 });
+
+                showPromptSpinner();
+                showNormalMessage("从Github中pull项目...");
+                GitUtils.pull(repository);
+                hidePromptSpinner();
+                showNormalMessage("Pull项目成功");
                 commitButton.setDisable(false);
             } catch (TipException e) {
                 showErrorMessage(e.getMessage());

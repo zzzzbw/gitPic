@@ -3,6 +3,9 @@ package com.zbw.gitpic.utils;
 import com.zbw.gitpic.exception.AuthorizedException;
 import com.zbw.gitpic.exception.TipException;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.MergeResult;
+import org.eclipse.jgit.api.PullResult;
+import org.eclipse.jgit.api.RebaseResult;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.TransportException;
 import org.eclipse.jgit.lib.Repository;
@@ -118,6 +121,26 @@ public class GitUtils {
         try {
             git.add().addFilepattern(".").call();
             git.commit().setMessage(commitMsg).call();
+        } catch (GitAPIException e) {
+            e.printStackTrace();
+            logger.error(e.getMessage());
+            throw new TipException("git commit 异常");
+        }
+    }
+
+    public static void pull(Repository repository) {
+        Git git = new Git(repository);
+        try {
+            PullResult result = git.pull().call();
+            FetchResult fetchResult = result.getFetchResult();
+            MergeResult mergeResult = result.getMergeResult();
+            if (fetchResult.getMessages() != null && !fetchResult.getMessages().isEmpty()) {
+                logger.info(fetchResult.getMessages());
+            }
+            logger.info(mergeResult.getMergeStatus().toString());
+            if (!mergeResult.getMergeStatus().isSuccessful()) {
+                throw new TipException(mergeResult.getMergeStatus().toString());
+            }
         } catch (GitAPIException e) {
             e.printStackTrace();
             logger.error(e.getMessage());
