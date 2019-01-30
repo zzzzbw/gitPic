@@ -4,7 +4,7 @@
 
 ### 环境需求
 
-* java 8+（如果没有java环境也提供带jre版本的,只是体积就emmmm.......）
+* Java 11 (Java8或者exe可以[下载](https://github.com/zzzzbw/gitPic/releases/tag/v0.1-java8))
 * git
 
 ### 依赖
@@ -26,7 +26,7 @@
 
    ![Step3](https://raw.githubusercontent.com/zzzzbw/blog_source/master/images/GitPic/step3.png)
 
-4. 打开gitPic软件,有java环境就在jar包目录下执行命令`java -jar gitPic-java.jar`,没有java环境就解压gitPic-exe.rar点击exe文件。
+4. 打开gitPic软件,在jar包目录下执行命令`java -jar gitPic.jar`。
 
 5. 在gitPic中选择你要作为图床的git项目，在本案例中就是刚才创建的git_resource(选择后会读取该项目下的git信息,获取会花一点时间)，然后再选择要保存图片的文件夹，比如你的java系列的图片可以放在git_resource项目下的java文件夹下。
 
@@ -42,9 +42,121 @@
 
 ### 下载链接
 
-[下载链接](https://github.com/zzzzbw/gitPic/releases) (jar版本和exe版本)
+[下载链接](https://github.com/zzzzbw/gitPic/releases)
 
 如果有任何觉得需要改进的地方请留言或者在issue中提出，非常感谢！
 
+### 开发者
 
+由于在Java 11中去除了JavaFX组件，所以开发和之前版本的有所不同。
 
+关于Java 11开发JavaFX可以查看[官方文档](https://openjfx.io/openjfx-docs/)
+
+#### 添加JavaFX依赖
+
+在`pom.xml`中引入JavaFX组件和`exec-maven-plugin`插件。
+
+```xml
+<dependencies>
+    ...
+    <dependency>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-controls</artifactId>
+        <version>11.0.2</version>
+    </dependency>
+
+    <dependency>
+        <groupId>org.openjfx</groupId>
+        <artifactId>javafx-fxml</artifactId>
+        <version>11.0.2</version>
+    </dependency>
+</dependencies>
+
+<build>
+    <plugins>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.8.0</version>
+            <configuration>
+                <release>11</release>
+            </configuration>
+        </plugin>
+        <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>1.6.0</version>
+            <executions>
+                <execution>
+                    <goals>
+                        <goal>java</goal>
+                    </goals>
+                </execution>
+            </executions>
+            <configuration>
+                <mainClass>com.zbw.gitpic.Bootstrap</mainClass>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
+```
+
+#### 运行程序
+
+```shell
+mvn compile exec:java
+```
+
+#### 打包程序
+
+在`pom.xml`添加`maven-shade-plugin`打包插件
+
+```xml
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-shade-plugin</artifactId>
+    <version>3.2.0</version>
+    <executions>
+        <execution>
+            <phase>package</phase>
+            <goals>
+                <goal>shade</goal>
+            </goals>
+            <configuration>
+                <shadedArtifactAttached>true</shadedArtifactAttached>
+                <shadedClassifierName>project-classifier</shadedClassifierName>
+                <outputFile>shade\${project.artifactId}.jar</outputFile>
+
+                <filters>
+                    <filter>
+                        <artifact>*:*</artifact>
+                        <excludes>
+                            <exclude>META-INF/*.SF</exclude>
+                            <exclude>META-INF/*.DSA</exclude>
+                            <exclude>META-INF/*.RSA</exclude>
+                        </excludes>
+                    </filter>
+                </filters>
+                <transformers>
+                    <transformer implementation=
+                                 "org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                        <mainClass>com.zbw.gitpic.Launcher</mainClass>
+                    </transformer>
+                </transformers>
+            </configuration>
+        </execution>
+    </executions>
+</plugin>
+```
+
+运行命令打包
+
+```java
+mvn compile package
+```
+
+运行命令启动程序
+
+```shell
+java -jar shade/gitPic.jar
+```
