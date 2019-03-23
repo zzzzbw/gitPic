@@ -5,23 +5,27 @@ import com.zbw.gitpic.exception.AuthorizedException;
 import com.zbw.gitpic.exception.TipException;
 import com.zbw.gitpic.utils.*;
 import javafx.application.Platform;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.TransferMode;
+import javafx.scene.image.Image;
+import javafx.scene.input.*;
 import javafx.scene.layout.StackPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.eclipse.jgit.lib.Repository;
 
+import javax.imageio.ImageIO;
+import java.awt.datatransfer.Transferable;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ResourceBundle;
 
 /**
@@ -172,6 +176,32 @@ public class MainController extends StackPane implements Initializable {
     }
 
     /**
+     * 从剪贴板复制
+     */
+    @FXML
+    protected void copyByClipboard() {
+        Clipboard clipboard = Clipboard.getSystemClipboard();
+        if (clipboard.hasImage()) {
+            Image image = clipboard.getImage();
+            BufferedImage bImage = SwingFXUtils.fromFXImage(image, null);
+            try {
+                Path tempDirectory = Files.createTempDirectory(Constants.GITPIC_PREFIX);
+                String tempFile = tempDirectory.toString() + File.separator + Constants.GITPIC_PREFIX + System.currentTimeMillis() + ".png";
+                File file = new File(tempFile);
+                ImageIO.write(bImage, "png", file);
+                uploadImgFilePath = file.getAbsolutePath();
+                copyAndGenerate();
+                file.delete();//删除临时图片
+                Files.delete(tempDirectory);//删除临时目录
+            } catch (IOException e) {
+                showErrorMessage("从剪切板拷贝图片异常", e);
+            }
+        } else {
+            showErrorMessage("剪切板中没有图片");
+        }
+    }
+
+    /**
      * commit push 按钮
      */
     @FXML
@@ -182,13 +212,13 @@ public class MainController extends StackPane implements Initializable {
                 showNormalMessage("commit中...");
                 GitUtils.commitAll(repository);
                 showSuccessMessage("commit成功!");
+                pushGit();
             } catch (TipException e) {
-                showErrorMessage(e.getMessage());
+                showErrorMessage(e);
                 commitButton.setDisable(false);
-                return;
             }
         });
-        pushGit();
+
     }
 
     /**
@@ -244,7 +274,7 @@ public class MainController extends StackPane implements Initializable {
                 showNormalMessage("Pull项目成功");
                 commitButton.setDisable(false);
             } catch (TipException e) {
-                showErrorMessage(e.getMessage());
+                showErrorMessage(e);
                 Platform.runLater(() -> {
                     gitSpinner.setVisible(false);
                     gitLabel.setText("");
@@ -264,14 +294,13 @@ public class MainController extends StackPane implements Initializable {
         try {
             copyToProject();
         } catch (TipException e) {
-            showErrorMessage(e.getMessage());
+            showErrorMessage(e);
             return;
         }
         try {
             generateGitRawPath();
         } catch (TipException e) {
-            showErrorMessage(e.getMessage());
-            return;
+            showErrorMessage(e);
         }
     }
 
@@ -348,7 +377,7 @@ public class MainController extends StackPane implements Initializable {
                             showSuccessMessage("push成功!");
                             hidePromptSpinner();
                         } catch (AuthorizedException e) {
-                            showErrorMessage(e.getMessage());
+                            showErrorMessage(e);
                             hidePromptSpinner();
                             Platform.runLater(() -> dialog.show(root));
                         }
@@ -360,7 +389,7 @@ public class MainController extends StackPane implements Initializable {
             } catch (TipException e) {
                 commitButton.setDisable(false);
                 hidePromptSpinner();
-                showErrorMessage(e.getMessage());
+                showErrorMessage(e);
             }
         });
     }
@@ -381,6 +410,25 @@ public class MainController extends StackPane implements Initializable {
      */
     private void showErrorMessage(String msg) {
         this.setGitMessageLabel(msg, "text-error");
+    }
+
+    /**
+     * 显示异常的信息
+     *
+     * @param e
+     */
+    private void showErrorMessage(Exception e) {
+        this.setGitMessageLabel(e.getMessage(), "text-dark");
+    }
+
+    /**
+     * 显示带异常信息的错误信息
+     *
+     * @param msg
+     * @param e
+     */
+    private void showErrorMessage(String msg, Exception e) {
+        this.setGitMessageLabel(msg + e.getMessage(), "text-error");
     }
 
     /**

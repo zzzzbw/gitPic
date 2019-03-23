@@ -6,6 +6,10 @@
     -fx-background-color: #E64A19;
 }
 
+.blue {
+    -fx-background-color: #448AFF;
+}
+
 .text-dark {
     -fx-text-fill: #bababa;
 }
