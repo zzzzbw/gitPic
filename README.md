@@ -18,7 +18,7 @@
 
    ![Step1](https://raw.githubusercontent.com/zzzzbw/blog_source/master/images/GitPic/step1.png)
 
-2. 给这个respository起一个名字,我们这里取名为git_resource。然后可以在Desciption中填写一些介绍。接下来勾选`Initialize this repository with a README`。最后点击`Create repository`。
+2. 给这个respository起一个名字,我们这里取名为git_resource。然后可以在Desciption中填写一些介绍。接下来勾选`Initialize this repository with a README`。最后点击`Create repository`。**注意respository要为Public，不然生成的链接会404**
 
    ![Step2](https://raw.githubusercontent.com/zzzzbw/blog_source/master/images/GitPic/step2.png)
 
