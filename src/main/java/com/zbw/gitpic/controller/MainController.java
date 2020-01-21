@@ -76,6 +76,7 @@ public class MainController extends StackPane implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        root.getChildren().remove(dialog); // 先从根组件移除弹窗，否则无法手动初始化弹窗
         stage = new Stage();
         promptSpinner.setVisible(false);
         gitSpinner.setVisible(false);

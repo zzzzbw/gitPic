@@ -5,7 +5,6 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import com.jfoenix.validation.ValidationFacade?>
 <StackPane styleClass="dark"
            fx:controller="com.zbw.gitpic.controller.MainController"
            fx:id="root"
