@@ -7,6 +7,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author zbw
@@ -14,8 +16,12 @@ import javafx.stage.Stage;
  */
 public class Bootstrap extends Application {
 
+    private static final Logger logger = LoggerFactory.getLogger(Bootstrap.class);
+
     @Override
     public void start(Stage primaryStage) throws Exception {
+        logger.info("app start!");
+
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/main.fxml"));
         final Scene scene = new Scene(root, 400, 400);
         scene.getStylesheets().add(Bootstrap.class.getResource("/css/jfoenix-components.css").toExternalForm());
@@ -29,6 +35,8 @@ public class Bootstrap extends Application {
 
     @Override
     public void stop() throws Exception {
+        logger.info("app stop!");
+
         ThreadPool.getInstance().shutdown();
         super.stop();
     }
