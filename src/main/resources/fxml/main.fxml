@@ -75,6 +75,8 @@
                 <children>
                     <JFXButton styleClass="button-raised,button-tiny" text="选择图片"
                                onAction="#chooseUploadImg"/>
+                    <JFXButton styleClass="button-raised,button-tiny,blue" text="从剪切板复制"
+                               onAction="#copyByClipboard"/>
                     <JFXButton fx:id="commitButton" styleClass="button-raised,button-tiny,orange" text="提交并上传"
                                onAction="#commitAndPush" disable="true"/>
                 </children>

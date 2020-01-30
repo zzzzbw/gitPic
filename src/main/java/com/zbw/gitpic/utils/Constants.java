@@ -12,8 +12,10 @@ public interface Constants {
     String SETTING_GIT_PASSWORD = "git_password";
 
     String GIT_PATH = ".git";
-    String GIT_DEFAULT_COMMIT_MESSAGE = "update";
+    String GIT_DEFAULT_COMMIT_MESSAGE = "update by gitPic";
     String GIT_SSH = "git@";
     String GIT_HTTPS = "https://";
     String GIT_MASTER_HEAD = "refs/heads/master";
+
+    String GITPIC_PREFIX = "gitPic_";
 }
