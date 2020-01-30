@@ -32,12 +32,10 @@ public class Preference {
         if (null == properties) {
             properties = PropsUtil.loadProps(Constants.SETTING_FILE);
         }
-        if (null != properties) {
-            projectPath = PropsUtil.getString(properties, Constants.SETTING_PROJECT_PATH);
-            picPath = PropsUtil.getString(properties, Constants.SETTING_PIC_PATH);
-            gitUsername = PropsUtil.getString(properties, Constants.SETTING_GIT_USERNAME);
-            gitPassword = PropsUtil.getString(properties, Constants.SETTING_GIT_PASSWORD);
-        }
+        projectPath = PropsUtil.getString(properties, Constants.SETTING_PROJECT_PATH);
+        picPath = PropsUtil.getString(properties, Constants.SETTING_PIC_PATH);
+        gitUsername = PropsUtil.getString(properties, Constants.SETTING_GIT_USERNAME);
+        gitPassword = PropsUtil.getString(properties, Constants.SETTING_GIT_PASSWORD);
     }
 
     public void saveProjectPath(String projectPath) {

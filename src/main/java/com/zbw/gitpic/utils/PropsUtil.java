@@ -1,5 +1,8 @@
 package com.zbw.gitpic.utils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.*;
 import java.util.Properties;
 
@@ -11,6 +14,8 @@ import java.util.Properties;
  */
 public final class PropsUtil {
 
+    private static final Logger logger = LoggerFactory.getLogger(PropsUtil.class);
+
     synchronized static public Properties loadProps(String propsName) {
         String jarUrl = JarUtil.getJarDir();
         String fileUrl = jarUrl + File.separator + propsName;
@@ -19,7 +24,7 @@ public final class PropsUtil {
             try {
                 propFile.createNewFile();
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(), e);
             }
         }
 
@@ -28,17 +33,15 @@ public final class PropsUtil {
         try {
             in = new FileInputStream(propFile);
             props.load(in);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         } finally {
             try {
                 if (null != in) {
                     in.close();
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(), e);
             }
         }
         return props;
@@ -53,7 +56,7 @@ public final class PropsUtil {
             props.store(fos, "This is the properties for gitPic");
             fos.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage(), e);
         }
     }
 

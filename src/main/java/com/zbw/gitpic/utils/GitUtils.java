@@ -122,8 +122,7 @@ public class GitUtils {
             git.add().addFilepattern(".").call();
             git.commit().setMessage(commitMsg).call();
         } catch (GitAPIException e) {
-            e.printStackTrace();
-            logger.error(e.getMessage());
+            logger.error(e.getMessage(), e);
             throw new TipException("git commit 异常");
         }
     }
@@ -142,8 +141,7 @@ public class GitUtils {
                 throw new TipException(mergeResult.getMergeStatus().toString());
             }
         } catch (GitAPIException e) {
-            e.printStackTrace();
-            logger.error(e.getMessage());
+            logger.error(e.getMessage(), e);
             throw new TipException("git commit 异常");
         }
     }
@@ -160,8 +158,7 @@ public class GitUtils {
             PushResult result = results.iterator().next();
             validPushResult(result);
         } catch (GitAPIException e) {
-            e.printStackTrace();
-            logger.error(e.getMessage());
+            logger.error(e.getMessage(), e);
             throw new TipException("git push 异常, message:" + e.getMessage());
         }
     }
@@ -181,11 +178,10 @@ public class GitUtils {
             PushResult result = results.iterator().next();
             validPushResult(result);
         } catch (TransportException e) {
-            logger.error(e.getMessage());
+            logger.error(e.getMessage(), e);
             throw new AuthorizedException("验证失败");
         } catch (GitAPIException e) {
-            e.printStackTrace();
-            logger.error(e.getMessage());
+            logger.error(e.getMessage(), e);
             throw new TipException("git push 异常, message:" + e.getMessage());
         }
     }
@@ -274,9 +270,7 @@ public class GitUtils {
         if (Constants.GIT_SSH.equals(authType(uri))) {
             uri = uri.replace("git@github.com:", "https://github.com/");
         }
-        StringBuilder urlSB = new StringBuilder(uri);
-        urlSB.append("/blob/").append(branchName).append(folder).append("/").append(fileName);
-        return urlSB.toString().replace("\\", "/");
+        return (uri + "/blob/" + branchName + folder + "/" + fileName).replace("\\", "/");
     }
 
     /**
