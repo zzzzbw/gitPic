@@ -16,6 +16,8 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.eclipse.jgit.lib.Repository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.imageio.ImageIO;
 import java.awt.datatransfer.Transferable;
@@ -33,6 +35,8 @@ import java.util.ResourceBundle;
  * @create 2018/2/26 16:36
  */
 public class MainController extends StackPane implements Initializable {
+
+    private static Logger logger = LoggerFactory.getLogger(MainController.class);
 
     private Stage stage;
 
@@ -192,9 +196,10 @@ public class MainController extends StackPane implements Initializable {
                 ImageIO.write(bImage, "png", file);
                 uploadImgFilePath = file.getAbsolutePath();
                 copyAndGenerate();
-                file.delete();//删除临时图片
+                file.delete();// 删除临时图片
                 Files.delete(tempDirectory);//删除临时目录
             } catch (IOException e) {
+                logger.error(e.getMessage(), e);
                 showErrorMessage("从剪切板拷贝图片异常", e);
             }
         } else {
