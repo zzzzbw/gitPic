@@ -4,7 +4,7 @@
 
 ### 环境需求
 
-* Java 11 (Java8或者exe可以[下载](https://github.com/zzzzbw/gitPic/releases/tag/v0.1-java8))
+* Java 11
 * git
 
 ### 依赖
@@ -22,7 +22,9 @@
 
    ![Step2](https://raw.githubusercontent.com/zzzzbw/blog_source/master/images/GitPic/step2.png)
 
-3. clone项目到本地。注意选择是https方式还是ssh方式，如果已经配置好ssh方式的话建议用这种方式，因为https需要输入账号密码。
+3. clone项目到本地`git clone git@github.com:zzzzbw/git_resource.git --depth=1`。
+
+    注意选择是https方式还是ssh方式，如果已经配置好ssh方式的话建议用这种方式，因为https需要输入账号密码。
 
    ![Step3](https://raw.githubusercontent.com/zzzzbw/blog_source/master/images/GitPic/step3.png)
 
