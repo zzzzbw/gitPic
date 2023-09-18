@@ -23,7 +23,7 @@
         <dependency>
             <groupId>org.eclipse.jgit</groupId>
             <artifactId>org.eclipse.jgit</artifactId>
-            <version>4.10.0.201712302008-r</version>
+            <version>6.6.1.202309021850-r</version>
         </dependency>
 
         <!-- slf4j -->
